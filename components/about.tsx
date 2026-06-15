@@ -76,9 +76,9 @@ export function About() {
             {stats.map((s) => (
               <li
                 key={s.label}
-                className="rounded-2xl border border-border bg-card p-4 text-center"
+                className="min-w-0 rounded-2xl border border-border bg-card p-4 text-center"
               >
-                <div className="font-serif text-2xl font-semibold text-primary md:text-3xl">
+                <div className="break-words font-serif text-2xl font-semibold text-primary md:text-3xl">
                   {s.value}
                 </div>
                 <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">

@@ -1,19 +1,133 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
-import { Clock, Mail, MapPin, Phone, Send, CheckCircle2 } from "lucide-react"
+import { useRef, useState } from "react"
+import {
+  Clock,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+  CheckCircle2,
+  Loader2,
+  AlertCircle,
+} from "lucide-react"
 import { CONTACT } from "@/lib/site-data"
+import { insertBooking } from "@/lib/supabase"
+
+type Status = "idle" | "submitting" | "success" | "error"
+type FieldErrors = Partial<Record<"name" | "phone" | "guests" | "date" | "time", string>>
+
+// Local YYYY-MM-DD (used as the date input min and for the past-date check).
+function todayISO() {
+  const d = new Date()
+  const offset = d.getTimezoneOffset()
+  return new Date(d.getTime() - offset * 60_000).toISOString().slice(0, 10)
+}
+
+function validate(values: {
+  name: string
+  phone: string
+  guests: string
+  date: string
+  time: string
+}): FieldErrors {
+  const errors: FieldErrors = {}
+
+  if (values.name.length < 2) {
+    errors.name = "Please enter your full name."
+  }
+
+  const phoneDigits = values.phone.replace(/[\s\-()]/g, "")
+  if (!/^\+?\d{10,15}$/.test(phoneDigits)) {
+    errors.phone = "Enter a valid phone number (10–15 digits)."
+  }
+
+  const guests = Number(values.guests)
+  if (!values.guests || !Number.isInteger(guests) || guests < 1 || guests > 20) {
+    errors.guests = "Guests must be between 1 and 20."
+  }
+
+  if (!values.date) {
+    errors.date = "Please choose a date."
+  } else if (values.date < todayISO()) {
+    errors.date = "Please choose today or a future date."
+  }
+
+  if (!values.time) {
+    errors.time = "Please choose a time."
+  }
+
+  return errors
+}
 
 export function Visit() {
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState<Status>("idle")
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [formError, setFormError] = useState("")
+  // Guards against duplicate submissions from rapid double-clicks (set before
+  // the async work, so a second click is rejected before state re-renders).
+  const submittingRef = useRef(false)
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 4000)
-    e.currentTarget.reset()
+    if (submittingRef.current) return
+
+    const form = e.currentTarget
+    const data = new FormData(form)
+    const values = {
+      name: String(data.get("name") ?? "").trim(),
+      phone: String(data.get("phone") ?? "").trim(),
+      guests: String(data.get("guests") ?? "").trim(),
+      date: String(data.get("date") ?? ""),
+      time: String(data.get("time") ?? ""),
+      message: String(data.get("message") ?? "").trim(),
+    }
+
+    const errors = validate(values)
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      setStatus("error")
+      setFormError("Please fix the highlighted fields and try again.")
+      return
+    }
+
+    setFieldErrors({})
+    setFormError("")
+    submittingRef.current = true
+    setStatus("submitting")
+
+    try {
+      const { error } = await insertBooking({
+        customer_name: values.name,
+        phone_number: values.phone,
+        booking_date: values.date,
+        booking_time: values.time,
+        guests: Number(values.guests),
+        special_request: values.message || null,
+      })
+
+      if (error) {
+        setStatus("error")
+        setFormError(
+          "Sorry, we couldn't save your booking right now. Please try again or call us directly.",
+        )
+        return
+      }
+
+      setStatus("success")
+      form.reset()
+    } catch {
+      setStatus("error")
+      setFormError(
+        "Something went wrong while connecting. Please check your network and try again.",
+      )
+    } finally {
+      submittingRef.current = false
+    }
   }
+
+  const isSubmitting = status === "submitting"
 
   return (
     <section id="contact" className="relative scroll-mt-24 bg-secondary/40 py-24 md:py-32">
@@ -102,6 +216,7 @@ export function Visit() {
           <div className="lg:col-span-5">
             <form
               onSubmit={onSubmit}
+              noValidate
               className="relative flex flex-col gap-4 rounded-[1.5rem] border border-border bg-card p-6 shadow-xl shadow-primary/5 md:p-8"
             >
               <div>
@@ -111,14 +226,77 @@ export function Visit() {
                 </p>
               </div>
 
-              <Field label="Full name" id="name" type="text" placeholder="Your name" required />
+              {status === "success" && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="flex items-start gap-2.5 rounded-xl border border-accent/40 bg-secondary/70 px-4 py-3 text-sm text-secondary-foreground"
+                >
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                  <span>
+                    <span className="font-semibold text-foreground">Booking received!</span>{" "}
+                    Thank you — we&apos;ll confirm your table via call or WhatsApp within 30 minutes.
+                  </span>
+                </div>
+              )}
+
+              {status === "error" && formError && (
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="flex items-start gap-2.5 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+                >
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>{formError}</span>
+                </div>
+              )}
+
+              <Field
+                label="Full name"
+                id="name"
+                type="text"
+                placeholder="Your name"
+                autoComplete="name"
+                required
+                error={fieldErrors.name}
+              />
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Phone" id="phone" type="tel" placeholder="+91" required />
-                <Field label="Guests" id="guests" type="number" placeholder="2" min={1} max={20} />
+                <Field
+                  label="Phone"
+                  id="phone"
+                  type="tel"
+                  placeholder="+91"
+                  autoComplete="tel"
+                  required
+                  error={fieldErrors.phone}
+                />
+                <Field
+                  label="Guests"
+                  id="guests"
+                  type="number"
+                  placeholder="2"
+                  min={1}
+                  max={20}
+                  required
+                  error={fieldErrors.guests}
+                />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Date" id="date" type="date" required />
-                <Field label="Time" id="time" type="time" required />
+                <Field
+                  label="Date"
+                  id="date"
+                  type="date"
+                  min={todayISO()}
+                  required
+                  error={fieldErrors.date}
+                />
+                <Field
+                  label="Time"
+                  id="time"
+                  type="time"
+                  required
+                  error={fieldErrors.time}
+                />
               </div>
               <div>
                 <label htmlFor="message" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -135,9 +313,15 @@ export function Visit() {
 
               <button
                 type="submit"
-                className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 transition-all hover:scale-[1.02] hover:bg-primary/90"
+                disabled={isSubmitting}
+                className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 transition-all hover:scale-[1.02] hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-70"
               >
-                {submitted ? (
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Reserving…
+                  </>
+                ) : status === "success" ? (
                   <>
                     <CheckCircle2 className="h-4 w-4" />
                     Request Sent
@@ -202,8 +386,14 @@ function InfoCard({
 function Field({
   label,
   id,
+  error,
   ...rest
-}: { label: string; id: string } & React.InputHTMLAttributes<HTMLInputElement>) {
+}: {
+  label: string
+  id: string
+  error?: string
+} & React.InputHTMLAttributes<HTMLInputElement>) {
+  const errorId = error ? `${id}-error` : undefined
   return (
     <div className="flex flex-col">
       <label
@@ -215,9 +405,20 @@ function Field({
       <input
         id={id}
         name={id}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={errorId}
         {...rest}
-        className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none ring-accent/40 transition-all placeholder:text-muted-foreground/70 focus:ring-2"
+        className={
+          error
+            ? "rounded-xl border border-destructive bg-background px-4 py-3 text-sm text-foreground outline-none ring-destructive/30 transition-all placeholder:text-muted-foreground/70 focus:ring-2"
+            : "rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none ring-accent/40 transition-all placeholder:text-muted-foreground/70 focus:ring-2"
+        }
       />
+      {error && (
+        <p id={errorId} className="mt-1.5 text-xs font-medium text-destructive">
+          {error}
+        </p>
+      )}
     </div>
   )
 }

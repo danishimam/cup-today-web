@@ -26,6 +26,19 @@
   --input: oklch(0.94 0.018 80);
   --ring: oklch(0.68 0.09 60);
   --radius: 0.875rem;
+  /* Height reserved for the fixed promo bar; drives the header + hero offset.
+     Set to 0 once the visitor dismisses the bar (see html.promo-dismissed). */
+  --promo-h: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --promo-h: 2.75rem;
+  }
+}
+
+html.promo-dismissed {
+  --promo-h: 0px;
 }
 
 @theme inline {
@@ -105,5 +118,12 @@
   }
   .animate-fade-up {
     animation: fade-up 0.8s ease-out both;
+  }
+  @keyframes shine {
+    to { background-position: -200% 0; }
+  }
+  .animate-shine {
+    background-size: 200% 100%;
+    animation: shine 6s linear infinite;
   }
 }

@@ -5,7 +5,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative isolate overflow-hidden bg-secondary/40 pt-28 pb-16 md:pt-36 md:pb-24"
+      className="relative isolate overflow-hidden bg-secondary/40 pb-16 pt-[calc(var(--promo-h,0px)+7rem)] md:pb-24 md:pt-[calc(var(--promo-h,0px)+9rem)]"
     >
       {/* decorative grain */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 grain opacity-40" />
@@ -128,7 +128,7 @@ export function Hero() {
             </div>
             <div className="mt-2 px-1">
               <div className="font-serif text-sm font-semibold">Cappuccino</div>
-              <div className="text-xs text-accent font-semibold">₹189</div>
+              <div className="text-xs text-accent font-semibold">Signature brew</div>
             </div>
           </div>
 
@@ -146,7 +146,7 @@ export function Hero() {
             </div>
             <div className="mt-2 flex items-center justify-between px-1">
               <div className="font-serif text-sm font-semibold leading-tight">Cheese Burst</div>
-              <div className="text-xs text-accent font-semibold">₹319</div>
+              <div className="text-xs text-accent font-semibold">Bestseller</div>
             </div>
           </div>
         </div>

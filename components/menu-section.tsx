@@ -106,9 +106,6 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
           <h3 className="font-serif text-xl font-semibold leading-tight text-foreground">
             {item.name}
           </h3>
-          <span className="shrink-0 font-serif text-lg font-semibold text-accent">
-            {item.price}
-          </span>
         </div>
         <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
       </div>

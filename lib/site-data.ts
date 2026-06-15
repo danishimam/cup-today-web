@@ -87,7 +87,6 @@ export const IMG = {
 export type MenuItem = {
   name: string
   desc: string
-  price: string
   image?: string
   tag?: string
 }
@@ -97,38 +96,32 @@ export const menu: Record<string, MenuItem[]> = {
     {
       name: "Cheese Burst Crispy Chicken Burger",
       desc: "Crispy chicken patty layered with molten cheese, fresh lettuce and our signature smoky sauce.",
-      price: "₹319",
       image: IMG.burger,
       tag: "Bestseller",
     },
     {
       name: "Peri Peri Smash Chicken Burger",
       desc: "Smashed chicken patty tossed in fiery peri-peri seasoning with crisp slaw and brioche bun.",
-      price: "₹249",
       image: IMG.burgerPeri,
     },
     {
       name: "Smoky Chicken Steak Burger",
       desc: "Tender chicken steak with smoky BBQ glaze, caramelised onions and pepper-jack cheese.",
-      price: "₹229",
       image: IMG.burgerSteak,
     },
     {
       name: "Crispy Crunch Chicken Burger",
       desc: "Golden, panko-crusted chicken with creamy mayo and pickles on a soft toasted bun.",
-      price: "₹229",
       image: IMG.burgerCrispy,
     },
     {
       name: "Zinger Blast Chicken Burger",
       desc: "Spicy zinger fillet with tangy mayo, lettuce and a kick of chilli — the classic.",
-      price: "₹219",
       image: IMG.burgerZinger,
     },
     {
       name: "Paneer Tikka Burger",
       desc: "Charred paneer tikka, mint-yogurt sauce, onion rings and lettuce on a fresh bun.",
-      price: "₹199",
       image: IMG.burgerPaneer,
     },
   ],
@@ -136,20 +129,17 @@ export const menu: Record<string, MenuItem[]> = {
     {
       name: "Fiery Spicy Grilled Chicken Sandwich",
       desc: "Chargrilled chicken with chilli mayo, jalapeños and melted cheese on toasted sourdough.",
-      price: "₹239",
       image: IMG.sandwich,
       tag: "Spicy",
     },
     {
       name: "Smoky Grilled Chicken Sandwich",
       desc: "Smoky grilled chicken, fresh greens and tangy aioli pressed in toasted artisan bread.",
-      price: "₹219",
       image: IMG.sandwichSmoky,
     },
     {
       name: "Paneer Tikka Sandwich",
       desc: "Tandoori paneer, onions, capsicum and mint chutney grilled to golden perfection.",
-      price: "₹199",
       image: IMG.sandwichPaneer,
     },
   ],
@@ -157,20 +147,17 @@ export const menu: Record<string, MenuItem[]> = {
     {
       name: "Chicken Supreme Cheese Pizza",
       desc: "Loaded with chicken, capsicum, onions, olives and an extra layer of mozzarella.",
-      price: "₹319",
       image: IMG.pizza,
       tag: "Chef's pick",
     },
     {
       name: "Chicken Tikka Pizza",
       desc: "Tandoori-spiced chicken tikka with peppers and onions on a hand-tossed base.",
-      price: "₹279",
       image: IMG.pizzaTikka,
     },
     {
       name: "Margherita Pizza",
       desc: "Tomato, fresh mozzarella and basil — simple, perfect, timeless.",
-      price: "₹229",
       image: IMG.pizzaMargherita,
     },
   ],
@@ -178,20 +165,17 @@ export const menu: Record<string, MenuItem[]> = {
     {
       name: "Loaded Cheese Fries",
       desc: "Crispy fries smothered in cheese sauce, herbs and a drizzle of chipotle mayo.",
-      price: "₹179",
       image: IMG.fries,
       tag: "Most loved",
     },
     {
       name: "Peri Peri Fries",
       desc: "Crispy fries tossed in tangy peri-peri seasoning — a fiery favourite.",
-      price: "₹149",
       image: IMG.friesPeri,
     },
     {
       name: "Classic Salted Fries",
       desc: "Golden, hand-cut fries with sea salt — the timeless side.",
-      price: "₹109",
       image: IMG.friesSalted,
     },
   ],
@@ -199,32 +183,27 @@ export const menu: Record<string, MenuItem[]> = {
     {
       name: "Caramel Latte",
       desc: "Espresso layered with steamed milk and rich house-made caramel — silky and indulgent.",
-      price: "₹229",
       image: IMG.coffee,
       tag: "Signature",
     },
     {
       name: "Café Latte",
       desc: "Smooth espresso with silky steamed milk, finished with a feather of micro-foam.",
-      price: "₹199",
       image: IMG.latte,
     },
     {
       name: "Cappuccino",
       desc: "Double-shot espresso topped with velvety steamed milk and a delicate latte-art crown.",
-      price: "₹189",
       image: IMG.pouring,
     },
     {
       name: "Americano",
       desc: "Hot water poured over a double espresso for a clean, lingering finish.",
-      price: "₹169",
       image: IMG.americano,
     },
     {
       name: "Espresso",
       desc: "Bold single-origin pour with a thick golden crema. Pure, intense, unmissable.",
-      price: "₹149",
       image: IMG.espresso,
     },
   ],
@@ -232,20 +211,17 @@ export const menu: Record<string, MenuItem[]> = {
     {
       name: "Blue Sea Mojito",
       desc: "Blue curaçao, mint, lime and sparkling soda — refreshing as the ocean breeze.",
-      price: "₹239",
       image: IMG.cranberry,
       tag: "Refreshing",
     },
     {
       name: "Virgin Mojito",
       desc: "Crushed mint, lime and soda over ice — the timeless classic.",
-      price: "₹239",
       image: IMG.sparklers,
     },
     {
       name: "Strawberry Mojito",
       desc: "Fresh strawberries muddled with mint, lime and chilled soda.",
-      price: "₹239",
       image: IMG.mojitoStraw,
     },
   ],
@@ -253,20 +229,17 @@ export const menu: Record<string, MenuItem[]> = {
     {
       name: "Brownie Milkshake",
       desc: "Thick chocolate shake folded with brownie chunks and topped with whipped cream.",
-      price: "₹239",
       image: IMG.milkshake,
       tag: "Indulgent",
     },
     {
       name: "Oreo Milkshake",
       desc: "Crushed Oreos blended into a creamy vanilla base for cookies-in-every-sip.",
-      price: "₹209",
       image: IMG.milkshakeOreo,
     },
     {
       name: "Mango Milkshake",
       desc: "Sun-ripened mango blended with chilled milk — sweet, smooth, summery.",
-      price: "₹199",
       image: IMG.milkshakeMango,
     },
   ],
@@ -288,8 +261,8 @@ export const ORDER = {
   // Prefilled WhatsApp message for placing an order
   message: "Hello Cup Today, I would like to place an order.",
   // Delivery business rules
-  freeDeliveryAbove: 300,
-  deliveryRadiusKm: 5,
+  minOrderValue: 349, // ₹ — no online order can be placed below this
+  freeDeliveryRadiusKm: 1, // free delivery within this radius; charges may apply beyond
   // WhatsApp deep-links built from CONTACT.phones (primary first, secondary fallback)
   whatsapp(phone: string, message: string) {
     return `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`
@@ -300,12 +273,12 @@ export const DELIVERY_INFO = [
   {
     icon: "truck" as const,
     title: "Free Delivery",
-    desc: "Free delivery available on orders above ₹300.",
+    desc: "Free delivery on all orders within a 1 KM radius.",
   },
   {
     icon: "pin" as const,
-    title: "Delivery Radius",
-    desc: "Delivery available within a 5 KM radius.",
+    title: "Beyond 1 KM",
+    desc: "Delivery charges may apply for locations beyond a 1 KM radius.",
   },
   {
     icon: "clock" as const,

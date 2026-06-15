@@ -18,6 +18,7 @@ import {
   ORDER_STEPS,
   IMG,
 } from "@/lib/site-data"
+import { cn } from "@/lib/utils"
 
 const infoIcon = {
   truck: Truck,
@@ -36,22 +37,36 @@ export function OrderOnline() {
   const [amount, setAmount] = useState("")
   const [distance, setDistance] = useState("")
 
+  const amt = Number.parseFloat(amount)
+  const dist = Number.parseFloat(distance)
+  const hasAmount = amount.trim() !== "" && !Number.isNaN(amt)
+  const hasDistance = distance.trim() !== "" && !Number.isNaN(dist)
+
+  // The order must meet the minimum value before it can be placed.
+  const belowMinimum = hasAmount && amt < ORDER.minOrderValue
+  const canOrder = !belowMinimum
+
   const notices = useMemo(() => {
     const list: string[] = []
-    const amt = Number.parseFloat(amount)
-    const dist = Number.parseFloat(distance)
-    if (!Number.isNaN(amt) && amt > 0 && amt < ORDER.freeDeliveryAbove) {
+    if (belowMinimum) {
+      const shortfall = Math.ceil(ORDER.minOrderValue - amt)
       list.push(
-        `Free delivery is available on orders above ₹${ORDER.freeDeliveryAbove}.`,
+        `A minimum order value of ₹${ORDER.minOrderValue} applies — add ₹${shortfall} more to place your order.`,
       )
+    } else if (hasAmount) {
+      list.push(`You're all set — your order meets the ₹${ORDER.minOrderValue} minimum.`)
     }
-    if (!Number.isNaN(dist) && dist > ORDER.deliveryRadiusKm) {
+    if (hasDistance && dist > ORDER.freeDeliveryRadiusKm) {
       list.push(
-        `Delivery service is currently available within a ${ORDER.deliveryRadiusKm} KM radius.`,
+        `Your location is beyond our ${ORDER.freeDeliveryRadiusKm} KM free-delivery radius, so delivery charges may apply.`,
+      )
+    } else if (hasDistance && dist > 0) {
+      list.push(
+        `Great news — you're within our ${ORDER.freeDeliveryRadiusKm} KM zone, so delivery is free.`,
       )
     }
     return list
-  }, [amount, distance])
+  }, [belowMinimum, hasAmount, hasDistance, amt, dist])
 
   const primaryHref = ORDER.whatsapp(CONTACT.phones[0], ORDER.message)
   const secondaryHref = ORDER.whatsapp(CONTACT.phones[1], ORDER.message)
@@ -149,7 +164,8 @@ export function OrderOnline() {
                 <h3 className="font-serif text-lg font-semibold">Check your delivery</h3>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                Enter your order details to see delivery eligibility before you order.
+                Minimum order ₹{ORDER.minOrderValue} · free delivery within{" "}
+                {ORDER.freeDeliveryRadiusKm} KM. Enter your details to check before you order.
               </p>
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <div className="flex flex-col">
@@ -160,10 +176,11 @@ export function OrderOnline() {
                     id="order-amount"
                     type="number"
                     inputMode="numeric"
-                    min={0}
-                    placeholder="e.g. 350"
+                    min={ORDER.minOrderValue}
+                    placeholder={`e.g. ${ORDER.minOrderValue}`}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
+                    aria-invalid={belowMinimum || undefined}
                     className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none ring-accent/40 transition-all placeholder:text-muted-foreground/70 focus:ring-2"
                   />
                 </div>
@@ -203,27 +220,47 @@ export function OrderOnline() {
             {/* Order actions */}
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <a
-                href={primaryHref}
+                href={canOrder ? primaryHref : undefined}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.03] hover:bg-primary/90 sm:w-auto"
+                aria-disabled={canOrder ? undefined : true}
+                tabIndex={canOrder ? undefined : -1}
+                className={cn(
+                  "inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.03] hover:bg-primary/90 sm:w-auto",
+                  !canOrder && "pointer-events-none opacity-60",
+                )}
               >
                 <WhatsAppIcon className="h-4 w-4" />
                 Order Now
               </a>
               <a
-                href={secondaryHref}
+                href={canOrder ? secondaryHref : undefined}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-primary/30 bg-background px-7 py-3.5 text-sm font-semibold text-primary transition-colors hover:bg-secondary sm:w-auto"
+                aria-disabled={canOrder ? undefined : true}
+                tabIndex={canOrder ? undefined : -1}
+                className={cn(
+                  "inline-flex w-full items-center justify-center gap-2 rounded-full border border-primary/30 bg-background px-7 py-3.5 text-sm font-semibold text-primary transition-colors hover:bg-secondary sm:w-auto",
+                  !canOrder && "pointer-events-none opacity-60",
+                )}
               >
                 <Phone className="h-4 w-4" />
                 Order via Secondary Number
               </a>
             </div>
             <p className="mt-3 text-center text-[11px] text-muted-foreground sm:text-left">
-              Tap <span className="font-semibold text-foreground">Order Now</span> to chat with us on WhatsApp.
-              If the primary line is busy, use the secondary number.
+              {canOrder ? (
+                <>
+                  Tap <span className="font-semibold text-foreground">Order Now</span> to chat with us on WhatsApp.
+                  If the primary line is busy, use the secondary number.
+                </>
+              ) : (
+                <>
+                  Orders start at{" "}
+                  <span className="font-semibold text-foreground">₹{ORDER.minOrderValue}</span>.
+                  Add a little more to your order to continue.
+                </>
+              )}
             </p>
           </div>
 

@@ -28,8 +28,9 @@ export function SiteHeader() {
 
   return (
     <header
+      style={{ top: "var(--promo-h, 0px)" }}
       className={cn(
-        "fixed inset-x-0 top-0 z-[100] transition-all duration-300",
+        "fixed inset-x-0 z-[100] transition-all duration-300",
         scrolled
           ? "glass-strong border-b border-primary/15 shadow-md shadow-primary/5"
           : "glass border-b border-border/40",
