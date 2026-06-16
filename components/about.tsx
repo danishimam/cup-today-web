@@ -18,8 +18,8 @@ const reasons = [
 
 export function About() {
   return (
-    <section id="about" className="relative scroll-mt-24 py-24 md:py-32">
-      <div className="mx-auto grid max-w-7xl gap-16 px-4 md:grid-cols-2 md:gap-12 md:px-8 lg:gap-20">
+    <section id="about" className="relative scroll-mt-28 py-16 md:scroll-mt-32 md:py-24 lg:py-28">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 md:grid-cols-2 md:gap-12 md:px-8 lg:gap-20">
         {/* Image collage */}
         <div className="relative">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-border shadow-xl shadow-primary/10">

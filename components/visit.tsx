@@ -130,7 +130,7 @@ export function Visit() {
   const isSubmitting = status === "submitting"
 
   return (
-    <section id="contact" className="relative scroll-mt-24 bg-secondary/40 py-24 md:py-32">
+    <section id="contact" className="relative scroll-mt-28 bg-secondary/40 py-16 md:scroll-mt-32 md:py-24 lg:py-28">
       <div aria-hidden className="pointer-events-none absolute inset-0 grain opacity-30" />
       <div className="relative mx-auto max-w-7xl px-4 md:px-8">
         <div className="mx-auto max-w-2xl text-center">

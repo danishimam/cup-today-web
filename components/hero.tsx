@@ -5,7 +5,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative isolate overflow-hidden bg-secondary/40 pb-16 pt-[calc(var(--promo-h,0px)+7rem)] md:pb-24 md:pt-[calc(var(--promo-h,0px)+9rem)]"
+      className="relative isolate overflow-hidden bg-secondary/40 pb-16 pt-[calc(var(--promo-h,0px)+6.5rem)] md:pb-24 md:pt-[calc(var(--promo-h,0px)+9rem)] lg:pb-28"
     >
       {/* decorative grain */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 grain opacity-40" />
@@ -27,7 +27,7 @@ export function Hero() {
             Now Open · Tolichowki, Hyderabad
           </div>
 
-          <h1 className="mt-6 text-balance font-serif text-5xl font-semibold leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl">
+          <h1 className="mt-6 text-balance font-serif text-4xl font-semibold leading-[1.08] tracking-tight text-foreground sm:text-5xl sm:leading-[1.05] md:text-6xl lg:text-7xl">
             Fresh Brews,{" "}
             <span className="italic text-primary">Delicious Bites</span>,
             <br className="hidden md:block" /> Memorable{" "}

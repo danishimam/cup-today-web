@@ -11,7 +11,7 @@ export function MenuSection() {
   return (
     <section
       id="menu"
-      className="relative scroll-mt-24 border-y border-border/60 bg-secondary/40 py-24 md:py-32"
+      className="relative scroll-mt-28 border-y border-border/60 bg-secondary/40 py-16 md:scroll-mt-32 md:py-24 lg:py-28"
     >
       <div aria-hidden className="pointer-events-none absolute inset-0 grain opacity-30" />
       <div className="relative mx-auto max-w-7xl px-4 md:px-8">

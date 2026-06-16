@@ -20,7 +20,7 @@ const reviews = [
 
 export function Testimonials() {
   return (
-    <section id="reviews" className="relative scroll-mt-24 py-24 md:py-28">
+    <section id="reviews" className="relative scroll-mt-28 py-16 md:scroll-mt-32 md:py-24 lg:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <div className="flex items-center justify-center gap-2 text-accent">

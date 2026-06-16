@@ -74,7 +74,7 @@ export function OrderOnline() {
   return (
     <section
       id="order"
-      className="relative scroll-mt-24 py-24 md:py-32"
+      className="relative scroll-mt-28 py-16 md:scroll-mt-32 md:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         {/* Heading */}
